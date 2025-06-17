@@ -202,7 +202,7 @@ impl Default for GltfLoaderSettings {
             load_cameras: true,
             load_lights: true,
             include_source: false,
-            convert_coordinates: false,
+            convert_coordinates: true,
         }
     }
 }
