@@ -1,6 +1,6 @@
 [package]
 name = "bevy_pbr"
-version = "0.16.2"
+version = "0.16.1"
 edition = "2024"
 description = "Adds PBR rendering to Bevy Engine"
 homepage = "https://bevyengine.org"
@@ -31,22 +31,22 @@ meshlet_processor = [
 
 [dependencies]
 # bevy
-bevy_app = "0.16.2"
-bevy_asset = "0.16.2"
-bevy_color = "0.16.3"
-bevy_core_pipeline = "0.16.2"
-bevy_derive = "0.16.2"
-bevy_diagnostic = "0.16.2"
-bevy_ecs = "0.16.2"
-bevy_image = "0.16.2"
-bevy_math = "0.16.2"
-bevy_reflect = "0.16.2"
-bevy_render = "0.16.2"
-bevy_tasks = { version = "0.16.2", optional = true }
-bevy_transform = "0.16.2"
-bevy_utils = "0.16.2"
-bevy_window = "0.16.2"
-bevy_platform = { version = "0.16.2", default-features = false, features = [
+bevy_app = "0.16.1"
+bevy_asset = "0.16.1"
+bevy_color = "0.16.2"
+bevy_core_pipeline = "0.16.1"
+bevy_derive = "0.16.1"
+bevy_diagnostic = "0.16.1"
+bevy_ecs = "0.16.1"
+bevy_image = "0.16.1"
+bevy_math = "0.16.1"
+bevy_reflect = "0.16.1"
+bevy_render = "0.16.1"
+bevy_tasks = { version = "0.16.1", optional = true }
+bevy_transform = "0.16.1"
+bevy_utils = "0.16.1"
+bevy_window = "0.16.1"
+bevy_platform = { version = "0.16.1", default-features = false, features = [
   "std",
 ] }
 
