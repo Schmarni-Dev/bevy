@@ -67,7 +67,12 @@ fn sort(screen_index: i32, buffer_size: i32, opaque_depth: f32) -> SortResult {
         // unpack color/alpha/depth
         let color = bevy_pbr::rgb9e5::rgb9e5_to_vec3_(fragment.x);
         let depth_alpha = bevy_core_pipeline::oit::unpack_24bit_depth_8bit_alpha(fragment.y);
-        fragment_list[i].color = color;
+        let premultiplied = bevy_core_pipeline::oit::unpack_premultiplied(fragment.y); 
+        if premultiplied {
+            fragment_list[i].color = color;
+        } else {
+            fragment_list[i].color = color * depth_alpha.y;
+        }
         fragment_list[i].alpha = depth_alpha.y;
         fragment_list[i].depth = depth_alpha.x;
     }
@@ -95,7 +100,7 @@ fn sort(screen_index: i32, buffer_size: i32, opaque_depth: f32) -> SortResult {
         }
         let color = fragment_list[i].color;
         let alpha = fragment_list[i].alpha;
-        var base_color = vec4(color.rgb * alpha, alpha);
+        var base_color = vec4(color.rgb, alpha);
         final_color = blend(final_color, base_color);
         if final_color.a == 1.0 {
             break;

@@ -107,11 +107,12 @@ fn cycle_scenes(
             commands.entity(e).despawn();
         }
         // increment scene_id
-        *scene_id = (*scene_id + 1) % 2;
+        *scene_id = (*scene_id + 1) % 3;
         // spawn next scene
         match *scene_id {
             0 => spawn_spheres(&mut commands, &mut meshes, &mut materials),
             1 => spawn_occlusion_test(&mut commands, &mut meshes, &mut materials),
+            2 => spawn_cubes(&mut commands, &mut meshes, &mut materials),
             _ => unreachable!(),
         }
     }
@@ -151,7 +152,7 @@ fn spawn_spheres(
         Mesh3d(sphere_handle.clone()),
         MeshMaterial3d(materials.add(StandardMaterial {
             base_color: GREEN.with_alpha(alpha).into(),
-            alpha_mode: AlphaMode::Blend,
+            alpha_mode: AlphaMode::Premultiplied,
             ..default()
         })),
         Transform::from_translation(pos_b + offset),
@@ -165,6 +166,44 @@ fn spawn_spheres(
             ..default()
         })),
         Transform::from_translation(pos_c + offset),
+        render_layers.clone(),
+    ));
+}
+
+fn spawn_cubes(
+    commands: &mut Commands,
+    meshes: &mut Assets<Mesh>,
+    materials: &mut Assets<StandardMaterial>,
+) {
+    let pos_a = Vec3::new(-1.0, 0.75, 0.0);
+    let pos_b = Vec3::new(0.0, -0.75, 0.0);
+    let pos_c = Vec3::new(1.0, 0.75, 0.0);
+
+    let offset = Vec3::new(0.0, 0.0, 0.0);
+
+    let cube_handle = meshes.add(Cuboid::from_size(Vec3::ONE).mesh());
+
+    let alpha = 1.0;
+
+    let render_layers = RenderLayers::layer(1);
+
+    commands.spawn((
+        Mesh3d(cube_handle.clone()),
+        MeshMaterial3d(materials.add(StandardMaterial {
+            base_color: RED.with_alpha(alpha).into(),
+            alpha_mode: AlphaMode::Premultiplied,
+            ..default()
+        })),
+        render_layers.clone(),
+    ));
+    commands.spawn((
+        Mesh3d(cube_handle.clone()),
+        MeshMaterial3d(materials.add(StandardMaterial {
+            base_color: GREEN.with_alpha(alpha).into(),
+            alpha_mode: AlphaMode::Blend,
+            ..default()
+        })),
+        Transform::from_scale(Vec3::splat(0.9)),
         render_layers.clone(),
     ));
 }
