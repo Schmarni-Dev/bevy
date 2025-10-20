@@ -1,3 +1,5 @@
+use alloc::sync::Arc;
+
 use async_channel::{Receiver, Sender};
 
 use bevy_app::{App, AppExit, AppLabel, Plugin, SubApp};
@@ -16,6 +18,9 @@ use crate::RenderApp;
 /// before I/O processing. This can be useful for something like frame pacing.
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, AppLabel)]
 pub struct RenderExtractApp;
+
+#[derive(Resource, Clone)]
+pub struct PipelinedRenderThreadOnCreateCallback(pub Arc<dyn Fn() + Send + Sync + 'static>);
 
 /// Channels used by the main app to send and receive the render app.
 #[derive(Resource)]
@@ -146,10 +151,17 @@ impl Plugin for PipelinedRenderingPlugin {
             render_to_app_receiver,
         ));
 
+        let callback = app
+            .world_mut()
+            .get_resource::<PipelinedRenderThreadOnCreateCallback>()
+            .cloned();
+
         std::thread::spawn(move || {
             #[cfg(feature = "trace")]
             let _span = tracing::info_span!("render thread").entered();
-
+            if let Some(callback) = callback {
+                callback.0();
+            }
             let compute_task_pool = ComputeTaskPool::get();
             loop {
                 // run a scope here to allow main world to use this thread while it's waiting for the render app
