@@ -1564,9 +1564,9 @@ where
         let table_index = self
             .bindless_index_tables
             .binary_search_by(|bindless_index_table| {
-                if bindless_index < bindless_index_table.index_range.start {
+                if  bindless_index_table.index_range.end <= bindless_index {
                     Ordering::Less
-                } else if bindless_index >= bindless_index_table.index_range.end {
+                } else if bindless_index_table.index_range.start > bindless_index {
                     Ordering::Greater
                 } else {
                     Ordering::Equal
